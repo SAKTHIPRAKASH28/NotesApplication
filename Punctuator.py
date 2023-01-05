@@ -1,20 +1,26 @@
-from punctuator import Punctuator
+
 from tkinter import *
 from tkinter import messagebox
+import requests
 
 
 def convert():
+    file2= open("{}_converted.txt".format(duration.get()),'w')
     try:
-        file1= open("{}.txt".format(duration.get()),'w')
-        content=""
-        for i in file:
-            content+=i
+        file1= open("{}.txt".format(duration.get()),'r')
         
-        p = Punctuator('model.pcl')
+        content=""
+        for i in file1:
+            content+=i
+    
 
-        p.punctuate(content)
-        file1.write(content)
+
+        url = "http://bark.phon.ioc.ee/punctuator"
+        x = requests.post(url, params={"text": content})
+        con=x.text
+        file2.write(con)
         file1.close()
+        file2.close()
         messagebox.showinfo("Alert!","Done!")
     except:
        messagebox.showinfo("Alert!","File Not Found!")
